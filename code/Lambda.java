@@ -10,7 +10,6 @@ public class Lambda {
 		double b[][] = new double[n][n];
 		double delta = getDelta(epsilon,n,m);
 		
-		System.out.println("Delta: "+ delta);
 		for(int i=0;i<n;i++)
 			for(int j=0;j<n;j++){
 				l[i][j] = 10;
@@ -27,6 +26,9 @@ public class Lambda {
 			for(int j=0;j<n;j++)
 				Rsd[i][j] = 0;
 		
+		network.printFlow(b);
+		
+		
 		/*   
 		int a= SAPath(rt,2,1,l,network);   //test shortest path selection
 		System.out.println(SAPath(rt,2,1,l,network));
@@ -38,10 +40,7 @@ public class Lambda {
 		for(int i=0; i<n;i++)
 			for(int j=0; j<n;j++)
 				incrementFlow[i][j] = 0;
-		
-		int count0 = 0;
-		int count1 = 0;	
-		int count2 = 0;
+
 		while(dL<3){
 			loopNumber++;
 			double d[][] = new double[n][n];
@@ -51,12 +50,13 @@ public class Lambda {
 			for(int i = 0;i<n;i++){
 				
 				int u = checkU(switches,i,d);
-				while(dL<3 && u!=-1){    //Dl < 1 and some d(u)>0
+				while(dL<1 && u!=-1){    //Dl < 1 and some d(u)>0
 					
 					Path path = SAPath(rt,u,i,l,network,b);
 					
 					
-//					path.printPath();
+					path.printPath();
+					path.printMatrix(b);
 //					network.printFlow(l);
 //					network.printFlow(b);
 					
@@ -67,7 +67,7 @@ public class Lambda {
 					double Rho = rho(network,path,b,incrementFlow);
 					
 					if(Rho == 0 || Rho ==-1 || fu < 0){
-						System.out.print("Error Lambda Rho "+ Rho+". fu "+fu );
+						System.out.print("Error Lambda Rho "+ Rho+", fu "+fu + ", c "+ c + ", switch "+u+", destination "+i);
 						System.exit(0);
 					}
 					 
@@ -107,29 +107,7 @@ public class Lambda {
 		}
 		
 		
-		network.printFlow(incrementFlow);
-//		network.printFlow(Rsd);
 		
-//		System.out.println(loopNumber); //loop number
-		System.out.printf("3: %d, 2: %d, 4: %d\n",count0,count1,count2);
-		System.out.printf("l[0][3]: %f, l[0][2]: %f, l[0][4]: %f, l[3][2]: %f \n",l[0][3],l[0][2],l[0][4],l[3][2]);
-		System.out.println(l[3][1]);
-		System.out.println(l[0][0]);
-		
-		int[] list0 = {0,3,1,2};
-		Path path0 = new Path(list0);
-		int[] list1 = {0,3,2};
-		Path path1 = new Path(list1);
-		int[] list2 = {0,2};
-		Path path2 = new Path(list2);
-		int[] list3 = {0,4,2};
-		Path path3 = new Path(list3);
-		path0.printPath(l);
-		path1.printPath(l);
-		path2.printPath(l);
-		path3.printPath(l);
-		
-		printU(b,incrementFlow);
 //		*/
 		
 		return lambda(network,Rsd)/maxU(b,incrementFlow);
@@ -236,10 +214,11 @@ public class Lambda {
 		int n = network.n;
 		int surround = -1;
 		double shortPathLen = -1;
-		Path[] path = SPstart(l,network,b,d);
+		//Path[] path = SPstart(l,network,b,d);
+		
 		for(int i = 0;i<n;i++){
-			double pathL = pathLength(rt.routing[i][d],l);
-			if(link[u][i]!=null&& rt.routing[i][d].path.size()!=0){  //
+			double pathL = pathLength(rt.routing[i][d],l,b);
+			if(link[u][i]!=null&& rt.routing[i][d].path.size()!=0 &&pathL >= 0){  //
 				double pathLen = pathL + l[u][i];
 		//		System.out.printf("%d,%d\n",i,d);
 		//		rt.routing[i][d].printPath();
@@ -259,9 +238,15 @@ public class Lambda {
 			System.out.println("No link to sink: "+d);
 			return null;
 		}
-		path[surround].path.add(0,u);
-		path[surround].distance += l[u][surround];
-		return path[surround];
+		System.out.println(surround);
+		
+		Path path = new Path();
+		path.path.add(u);
+		for(int i=0;i<rt.routing[surround][d].path.size();i++)
+			path.path.add(rt.routing[surround][d].path.get(i));
+		
+		path.setDistance(l);
+		return path;
 	}
 	
 	Path SAPathForFindRoute(RoutingTable rt, int u,int d,double l[][],Network network,double b[][]){
@@ -307,7 +292,6 @@ public class Lambda {
 		for(int i = 0;i<n;i++){
 			paths[i] = new Path();
 		}
-		
 
 		while(Erelax(distance,paths,l,b,parents,n)){}
 
@@ -336,7 +320,7 @@ public class Lambda {
 			return false;		
 		
 		for(int i = 0; i<n; i++){
-			if(b[i][node] >0 && l[i][node]>0){            //     link's capacity is larger than 0
+			if(b[i][node] >0 && l[i][node]>0 &&distance[i] != -2){            //     link's capacity is larger than 0
 				double d = distance[node] + l[i][node];
 				if(d < distance[i] ||distance[i] == -1){
 					distance[i]=d;
@@ -346,6 +330,7 @@ public class Lambda {
 		}
 		
 		paths[node].distance = distance[node];
+		System.out.println(distance[node]+" "+node);
 		paths[node].path.add(node);
 		int j = parents[node];
 		if(j!= -1){
@@ -355,6 +340,31 @@ public class Lambda {
 
 		distance[node] = -2;
 		return true;
+	}
+	
+	double pathLength(Path path, double l[][],double b[][]){
+		if(path == null){
+			System.out.println("pathLength in Lambda, path is null");
+			System.exit(0);
+		}
+		
+		if(path.path.size() == 1)
+			return 0;
+				
+		int parent = -1;
+		double length = 0;
+		for(int i=0;i<path.path.size();i++){
+			if(parent == -1){
+				parent = path.path.get(i);				
+			}else{
+				int current = path.path.get(i);
+				if(b[parent][current] <= 0)
+					return -1;
+				length += l[parent][current];
+				parent = current;
+			}
+		}
+		return length;
 	}
 		
 	double pathLength(Path path, double l[][]){

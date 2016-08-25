@@ -54,4 +54,19 @@ public class Path {
 		for(int i=0;i<list.length;i++)
 			this.path.add(list[i]);
 	}
+	
+	public void printMatrix(double [][]b){
+		int parent = -1;
+		for(int i=0;i<this.path.size();i++){
+			if(parent == -1){
+				parent = this.path.get(i);
+				System.out.printf("%d ", parent);
+			}else{
+				int current = this.path.get(i);
+				System.out.printf("%f %d ", b[parent][current],current);
+				parent = current;
+			}
+		}
+		System.out.printf("\n");
+	}
 }

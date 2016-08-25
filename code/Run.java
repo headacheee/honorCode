@@ -9,9 +9,13 @@ public class Run {
 		to.setTopology("abilene.xml");
 		n = to.n;
 		Network network = new Network(n); // create network
-		int[] switches = {0,1};
+		
+		
+		int[] switches = {0,1,5,6,7,8,3,9,10};
 		network.setSwitches(switches);	
 		network.setMatrixByTopology(to);
+		
+		
 		
 	//	AlgorithmAngle aa = new AlgorithmAngle();
 	//	System.out.println(aa.best(network,0.4));
@@ -19,7 +23,7 @@ public class Run {
 		Traffic traffic = new Traffic(n);  //randomly generate flow
 //		traffic.generateTraffic();
 		traffic.setTrafficByTo(to);
-		
+
 //		traffic.printTrafficFlow();
 //		traffic.printTrafficFlowForSetting();
 		
@@ -28,7 +32,7 @@ public class Run {
 		for(int i=0;i<n;i++)
 			rt.routing[i] = a.routing(network,i,n);
 		
-		//rt.printPath(n);
+//		rt.printPath(n);
 		
 		
 		//rt.linkUtilization(traffic, network, n);
@@ -36,15 +40,16 @@ public class Run {
 		
 //		network.printLinkFlow();
 
-		network.printSDNFlow();		
+//		network.printSDNFlow();		
 		
-		long end = System.nanoTime();
-		//System.out.println("Running "+(end - start) / 1000000);
 		
 		
 		
 		Lambda l = new Lambda();
-		System.out.println(l.getLambda(0.01, network, rt));
+		System.out.println(l.getLambda(0.1, network, rt));
+		
+		long end = System.nanoTime();
+		System.out.println("Running "+(end - start) / 1000000000);
 
 	}
 	
