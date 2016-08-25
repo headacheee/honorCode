@@ -6,7 +6,7 @@ public class Run {
 		int n;
 		
 		Topology to = new Topology();
-		to.setTopology("abilene.xml");
+		to.setTopology("atlanta.xml");
 		n = to.n;
 		Network network = new Network(n); // create network
 		

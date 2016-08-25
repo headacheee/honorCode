@@ -41,7 +41,7 @@ public class Lambda {
 			for(int j=0; j<n;j++)
 				incrementFlow[i][j] = 0;
 
-		while(dL<3){
+		while(dL<1){
 			loopNumber++;
 			double d[][] = new double[n][n];
 			for(int j=0;j<n;j++)
@@ -55,8 +55,8 @@ public class Lambda {
 					Path path = SAPath(rt,u,i,l,network,b);
 					
 					
-					path.printPath();
-					path.printMatrix(b);
+//					path.printPath();
+//					path.printMatrix(b);
 //					network.printFlow(l);
 //					network.printFlow(b);
 					
@@ -238,7 +238,6 @@ public class Lambda {
 			System.out.println("No link to sink: "+d);
 			return null;
 		}
-		System.out.println(surround);
 		
 		Path path = new Path();
 		path.path.add(u);
