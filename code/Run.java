@@ -1,21 +1,24 @@
- 
+
 public class Run {
 	public static void main(String[] args){
 		long start = System.nanoTime();
 		
-		int n = 5;
-
+		int n;
+		
+		Topology to = new Topology();
+		to.setTopology("abilene.xml");
+		n = to.n;
 		Network network = new Network(n); // create network
 		int[] switches = {0,1};
 		network.setSwitches(switches);	
-		network.setMatrix3();
+		network.setMatrixByTopology(to);
 		
-		AlgorithmAngle aa = new AlgorithmAngle();
+	//	AlgorithmAngle aa = new AlgorithmAngle();
 	//	System.out.println(aa.best(network,0.4));
 		
 		Traffic traffic = new Traffic(n);  //randomly generate flow
 //		traffic.generateTraffic();
-		traffic.setTraffic();
+		traffic.setTrafficByTo(to);
 		
 //		traffic.printTrafficFlow();
 //		traffic.printTrafficFlowForSetting();

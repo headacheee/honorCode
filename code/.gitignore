@@ -8,3 +8,6 @@
 /SPRouting.class
 /Traffic.class
 /Topology.class
+/Nodes.class
+/Links.class
+/Demand.class

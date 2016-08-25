@@ -31,6 +31,13 @@ public class Traffic {
 			}
 	}
 	
+	void setTrafficByTo(Topology to){
+		for(int i = 0;i<n;i++){
+			Demand demand = to.demand[i];
+			this.trafficMatrix[demand.start][demand.end] = demand.demandValue;
+		}
+	}
+	
 	void setTraffic(int n){
 	
 		this.trafficMatrix[0][4] = 0.1;

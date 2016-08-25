@@ -36,6 +36,21 @@ public class Network {
 		this.switches = switches;
 	}
 	
+	public void setMatrixByTopology(Topology to){
+		int m = to.m;
+		for(int i = 0;i<m;i++){
+			Links links = to.links[i];
+			this.addBiLink(links.capacity,links.length,links.start,links.end);
+		}
+	}
+	
+	void addBiLink(double c,double l,int s,int e){
+		this.link[s][e] = new Link(c,l,s,e);
+		linkList.add(this.link[s][e]);
+		this.link[e][s] = new Link(c,l,e,s);
+		linkList.add(this.link[e][s]);
+	}
+	
 	public void setMatrix(){
 		this.link[1][2] = new Link(2,1,1,2);
 		this.link[1][3] = new Link(3,3,1,3);
@@ -67,6 +82,8 @@ public class Network {
 				this.link[i][j] = new Link(a.c,a.l,a.e,a.s);
 			}
 	}
+	
+	
 	
 	
 	public void setMatrix4(){
