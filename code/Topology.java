@@ -5,7 +5,9 @@ import java.io.*;
 
 public class Topology {
 	
-	public static void main(String[] args){
+	Nodes nodes[];
+	
+	public void setTopology(){
 		try{
 			File inputFile = new File("abilene.xml");
 			DocumentBuilderFactory dbFactory  = DocumentBuilderFactory.newInstance();
@@ -13,7 +15,18 @@ public class Topology {
 			Document doc = dBuilder.parse(inputFile);
 			doc.getDocumentElement().normalize();
 			
+			NodeList nodeList = doc.getDocumentElement().getElementsByTagName("node");
+			int n = nodeList.getLength();
+			nodes = new Nodes[n];
+			
+			for(int i=0;i<n;i++){
+				Element e = (Element)nodeList.item(i);
+				
+			}
+			
 			Element e = (Element)doc.getDocumentElement().getElementsByTagName("node").item(0);
+			
+//			double a = e.getElementsByTagName("x").item(0).getTextContent();
 
 			
 			System.out.println(e.getElementsByTagName("x").item(0).getTextContent());
