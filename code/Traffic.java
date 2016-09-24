@@ -2,6 +2,7 @@ import java.util.Random;
 
 
 public class Traffic {
+	int p;
 	int n;
 	double trafficMatrix[][];
 	
@@ -32,9 +33,10 @@ public class Traffic {
 	}
 	
 	void setTrafficByTo(Topology to){
-		for(int i = 0;i<n;i++){
+		this.p = to.p;
+		for(int i = 0;i<to.p;i++){
 			Demand demand = to.demand[i];
-			this.trafficMatrix[demand.start][demand.end] = demand.demandValue;
+			this.trafficMatrix[demand.start][demand.end] = demand.demandValue/n;
 		}
 	}
 	
@@ -62,5 +64,9 @@ public class Traffic {
 		}
 		System.out.print("0}");
 		System.out.println();
+	}
+	
+	void prinfTrafficInfo(){
+		System.out.print("demands: "+p +"      ");
 	}
 }

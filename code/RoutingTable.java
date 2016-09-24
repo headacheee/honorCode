@@ -17,7 +17,7 @@ public class RoutingTable {
 							parent = this.routing[i][j].path.get(k);
 						}else{
 							int current = this.routing[i][j].path.get(k);
-							network.link[parent][current].flow += flow;
+							network.link[parent][current].total += flow;
 							parent = current;
 						}
 					}

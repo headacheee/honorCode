@@ -6,6 +6,7 @@ public class Link {
 	int e;  //end
 	double flow = 0;
 	double sdnF = 0;
+	double total = 0;
 	
 	Link(double c, double l,int s,int e){
 		this.c = c;

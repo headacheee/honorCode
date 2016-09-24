@@ -180,4 +180,18 @@ public class Network {
 			i += 4;
 		}
 	}
+	
+	public void setAll(){
+		int n = this.n;
+		int[] switches = new int[n];
+		for(int i = 0;i<n;i++){
+			switches[i]=i;
+		}
+		this.setSwitches(switches);
+	}
+	
+	public void printNetworkInf(Traffic traffic){
+		System.out.print("Network. nodes: "+n+", links: "+ linkList.size()+", ");
+		traffic.prinfTrafficInfo();
+	}
 }
